@@ -3,6 +3,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <title>Intro to FeatureLayer | Sample | ArcGIS Maps SDK for JavaScript 4.30</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>  
     <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
@@ -24,11 +25,69 @@
         width: 100%;
       }
 
+      /* Custom CSS for round zoom controls */
+.esri-widget {
+  background-color: rgba(0,0,0,0) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0) !important;
+}
+.esri-widget--button {
+  background-color: none; /* Set background color */          
+  border-radius: 0%; /* Make them round */
+  width: 40px; /* Width of the button */
+  height: 40px; /* Height of the button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow */
+  margin: 5px; /* Margin between buttons */
+  padding: 0;
+}
+
+.esri-widget--button .esri-icon {
+    margin: 0; /* Center the icon */
+    font-size: 30px; /* Size of the icon */
+    font-weight: 700;
+    color: #0079c1; /* Icon color */
+  }
+
+  ion-split-pane {
+  --side-width: 50%;
+  --side-max-width: 50%; 
+  --border: none;
+  }
+
+#rangecontainer {
+  background-color: white;
+  width: 30%;
+  position: absolute;
+  top:68px;
+  left: 70px;
+ }
+
+
+  ion-range {
+    width: 30%;
+    position: absolute;
+    top:24px;
+    left: 90px;
+    --knob-box-shadow:  0 3px 1px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.13), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    --bar-background: #83A1A0;
+    --bar-background-active: #d7d8da;
+    --bar-height: 6px;
+    --bar-border-radius: 8px;
+    --knob-background: #ffffff;
+    --knob-size: 30px;
+    --pin-background: #ffafcc;
+    --pin-color: #fff; 
+  }
+
      
     </style>
 
     <script>
       require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/TileLayer"], (Map, MapView, FeatureLayer, TileLayer) => {
+
+        const range = document.querySelector('ion-range');
 
         const swiper = new Swiper('.swiper', {
           // Optional parameters
@@ -59,9 +118,7 @@
           container: "viewDiv",
           map: map,
           center: [-88.5694, 47.1211],
-          zoom: 14
-
-          
+          zoom: 14          
         });
 
         /********************
@@ -97,68 +154,54 @@
          map_1928: new TileLayer({
           url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/KeweenawHSDI/KeTT_1928_FIPS/MapServer",    
         }), 
+         map_1954: new TileLayer({
+          url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/mtu1955/MapServer",    
+        }), 
+         map_1955: new TileLayer({
+          url: "https://tiles.arcgis.com/tiles/RPhrOu9XQzI31xTa/arcgis/rest/services/campus1955/MapServer",    
+        }), 
+         map_1965: new TileLayer({
+          url: "https://tiles.arcgis.com/tiles/RPhrOu9XQzI31xTa/arcgis/rest/services/MTU_Campus_1965/MapServer",    
+        }),
       };   
 
-        map.add(viewshedsLayer);
+      map.add(viewshedsLayer);
 
-        function changeMap(year) {
-          // Keep track of the currently active tile layers
-          let activeTileLayer = null;
-          // get variable from attributes for the map year string
-          const mapstr = "map_" + year;
-          console.log(mapstr);
-          // Remove the previously active tile layer, if any
-          if (activeTileLayer) {
-            map.remove(activeTileLayer);
-          }
+      function changeMap(year) {
+        // Keep track of the currently active tile layers
+        let activeTileLayer = null;
 
-          // Retrieve the tile layer from the tileLayers object
-          const tileLayerToAdd = tileLayers[mapstr];
+        // get the value of the range slider  
+        let rangeVal = $( "ion-range" ).val();
+     
+        //activeTileLayer.opacity = rangeVal / 100;        
+     
+        // adjust the transparency of the map based on the sliders value  
+        range.addEventListener('ionInput', ({ detail }) => {                     
+          activeTileLayer.opacity = detail.value / 100;                  
+        }); 
 
-          if (tileLayerToAdd) {
-            // Add the retrieved tile layer to the map
-            map.add(tileLayerToAdd, 0);
-            activeTileLayer = tileLayerToAdd; // Update the active layer
-          } else {
-            console.log("Tile layer not found for the given map year:", year);
-          }
+        // get variable from attributes for the map year string
+        const mapstr = "map_" + year;
+        console.log(mapstr);
+        // Remove the previously active tile layer, if any
+        if (activeTileLayer) {
+          map.remove(activeTileLayer);
         }
 
-        pointsLayer.queryFeatures({
-            //query object
-            where: "1=1",
-            returnGeometry: false,
-            outFields: ["*"],
-          })
-          .then((data) => {
-            console.log(data.features);
-            const features = data.features;
-            const image_id = features[0].attributes.image_no;
-            //const mapYear = features[0].attributes.mapyear;
-            const imgUrl = "https://cchi-new.mtu.edu/system/files/2023-12/" + image_id + ".jpg"
-            //console.log(image_id, mapYear, imgUrl);
+        // Retrieve the tile layer from the tileLayers object
+        const tileLayerToAdd = tileLayers[mapstr];
 
-             const swiperWrapper = document.querySelector('.swiper-wrapper');
+        if (tileLayerToAdd) {
+          // Add the retrieved tile layer to the map
+          map.add(tileLayerToAdd, 0);
+          activeTileLayer = tileLayerToAdd; // Update the active layer
+        } else {
+          console.log("Tile layer not found for the given map year:", year);
+        }
+      }
 
-            features.forEach(feature => {
-                const image_id = feature.attributes.image_no;
-                const mapYear = feature.attributes.mapyear;
-                const imgUrl = "https://cchi-new.mtu.edu/system/files/2023-12/" + image_id + ".jpg";
-                console.log("image alt: " + image_id, "img url: " + imgUrl);
-                
-                // Create a new slide
-                const slide = document.createElement('div');
-                slide.classList.add('swiper-slide');
-                slide.innerHTML = `
-                    <div>
-                        <img src="${imgUrl}" alt="Image ${image_id}" loading="lazy">
-                        <p>Map Year: ${mapYear}</p>
-                    </div>
-                `;
-                // Append the slide to the swiper wrapper
-                swiperWrapper.appendChild(slide);
-              });
-          });
+      
 
           // listen for the swiper slide changes
           swiper.on('slideChange', function (event) {
@@ -184,8 +227,7 @@
             pointsLayer.definitionExpression = "identifier =" + "'" + altText + "'";
             changeMap(mapyear);
           });
-            });
-        
+        });        
       });
     </script>
   </head>
@@ -196,17 +238,23 @@
       <ion-split-pane when="xs" content-id="main">
   <ion-menu content-id="main">
     <ion-header>
-      <ion-toolbar color="tertiary">
-        <ion-title>Menu</ion-title>
+      <ion-toolbar color="dark">
+         <ion-buttons slot="start">
+        <ion-img src="husky.svg" style="width: 50px; height: 50px;"></ion-img>
+      </ion-buttons> 
+        <ion-title>Keweenaw Towns & Cities - Houghton</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content> <div id="viewDiv"></div> </ion-content>
+    <ion-content> 
+      <div id="viewDiv"></div>
+      <ion-range value="100" mode="ios"></ion-range> 
+    </ion-content>
   </ion-menu>
 
   <div class="ion-page" id="main">
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Main View</ion-title>
+      <ion-toolbar color="dark">
+        
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -440,16 +488,6 @@
      </ion-content>
   </div>
 </ion-split-pane>
-
-<style>
-  ion-split-pane {
-    --side-width: 50%;
-    --side-max-width: 50%;
-
-    --border: 1px dashed #b3baff;
-  }
-</style>
-
     </ion-content>
   </ion-app>
   </body>
