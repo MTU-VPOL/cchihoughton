@@ -88,16 +88,17 @@
       require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/TileLayer"], (Map, MapView, FeatureLayer, TileLayer) => {
 
         const range = document.querySelector('ion-range');
+        var modal = document.querySelector('ion-modal');
 
         const swiper = new Swiper('.swiper', {
           // Optional parameters
           direction: 'horizontal',
           loop: true,
 
-          /*// If we need pagination
+       // If we need pagination
           pagination: {
             el: '.swiper-pagination',
-          },*/
+          },
 
           // Navigation arrows
           navigation: {
@@ -121,13 +122,25 @@
           zoom: 14          
         });
 
+        // renderer for the focal points layer
+        const renderer = {
+         type: "simple",
+         symbol: {
+            type: "picture-marker",
+            url: 'camera.svg',
+            width: 25,
+            height: 25
+         }
+        }
+
         /********************
          * Add feature layer
          ********************/
 
         // CCHI Focal points
         const pointsLayer = new FeatureLayer({
-          url: "https://services2.arcgis.com/RPhrOu9XQzI31xTa/arcgis/rest/services/CCHI_Viewsheds_Houghton_Points/FeatureServer"
+          url: "https://services2.arcgis.com/RPhrOu9XQzI31xTa/arcgis/rest/services/CCHI_Viewsheds_Houghton_Points/FeatureServer",
+          renderer: renderer
         });
 
         map.add(pointsLayer);
@@ -168,7 +181,7 @@
         }),
       };   
 
-      map.add(viewshedsLayer);
+      map.add(viewshedsLayer, 0);
 
       // Keep track of the currently active tile layers
       let activeTileLayer = null;
@@ -229,17 +242,46 @@
         // filter the focal points and viewsheds by the current alt text
         viewshedsLayer.definitionExpression = "identifier =" + "'" + altText + "'";
         pointsLayer.definitionExpression = "identifier =" + "'" + altText + "'";
-        $('#caption').html(desc);
+        $('#desc').html(desc);
+        $('#title').html(title);
+        $('#year').html("Photo Date: " + date);
         console.log(desc);
         changeMap(mapyear);
       });
-    });        
+    });
+
+    $("#openModal").click(function(){
+      modal.isOpen = true;
+    });
+
+    $("#close").click(function(){
+      modal.isOpen = false;
+    });
+
   });
     </script>
   </head>
 
   <body>
     <ion-app>
+      <ion-modal trigger="open-modal">
+    <ion-header>
+      <ion-toolbar>        
+        <ion-title>About this Application</ion-title>
+        <ion-buttons slot="end">
+          <ion-button strong="true" id="close">X</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-text><h3>About</h3></ion-text>
+      <ion-text>
+        <p>Welcome to the Keweenaw Towns and Cities - Huoghton application. This is an interactive application where you can explore what the City of Houghton and the surrounding area looked like in the past through the use of historical maps and photographs. This application will show you the approximate location or focal point where the photograph was taken and a viewshed of the area it covers. </p>        
+      </ion-text> 
+        <ion-text><h3>Using the Application</h3></ion-text>
+        <ion-text><p>Swipe left or right or press the left or right arrows to view photographs. The map will automatically update with a corresponding historical map and viewshed for each photograph.</p></ion-text>        
+    </ion-content>
+  </ion-modal>
     <ion-content class="ion-padding">
       <ion-split-pane when="xs" content-id="main">
   <ion-menu content-id="main">
@@ -260,7 +302,9 @@
   <div class="ion-page" id="main">
     <ion-header>
       <ion-toolbar color="dark">
-        
+        <ion-button size="med" slot="end" color="dark" id="openModal">
+  <ion-icon name="information-circle-outline" size="large" slot="icon-only"></ion-icon>
+</ion-button>  
       </ion-toolbar>
     </ion-header>
     <ion-content>      
@@ -268,11 +312,11 @@
 <div class="swiper">
   <ion-card>
   <ion-card-header>
-    <ion-card-title>Card Title</ion-card-title>
-    <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+    <ion-card-title id="title">Card Title</ion-card-title>
+    <ion-card-subtitle id="year">Card Subtitle</ion-card-subtitle>
   </ion-card-header>
 
-  <ion-card-content>
+  <ion-card-content id="desc">
     Here's a small text description for the card content. Nothing more, nothing less.
   </ion-card-content>
 </ion-card>
@@ -491,7 +535,7 @@
 <div class="swiper-slide"><img src="https://cchi-new.mtu.edu/system/files/2023-12/MS042-007-053-852.jpg" alt="MS042-007-053-852" loading="lazy"></div>
 <div class="swiper-slide"><img src="https://cchi-new.mtu.edu/system/files/2023-12/NoNeg 2012-08-17-002.jpg" alt="NoNeg 2012-08-17-002" loading="lazy"></div>
   </div>
-  <div id="caption">your Text</div>
+  
   <!-- If we need pagination -->
   <div class="swiper-pagination"></div>
 
