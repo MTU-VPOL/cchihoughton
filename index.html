@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>Intro to FeatureLayer | Sample | ArcGIS Maps SDK for JavaScript 4.30</title>
+    <title>Keweenaw Towns & Cities - Houghton and Hancock</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>  
     <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
@@ -26,60 +26,59 @@
       }
 
       /* Custom CSS for round zoom controls */
-.esri-widget {
-  background-color: rgba(0,0,0,0) !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0) !important;
-}
-.esri-widget--button {
-  background-color: none; /* Set background color */          
-  border-radius: 0%; /* Make them round */
-  width: 40px; /* Width of the button */
-  height: 40px; /* Height of the button */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow */
-  margin: 5px; /* Margin between buttons */
-  padding: 0;
-}
+      .esri-widget {
+        background-color: rgba(0,0,0,0) !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0) !important;
+      }
+      .esri-widget--button {
+        background-color: none; /* Set background color */          
+        border-radius: 0%; /* Make them round */
+        width: 40px; /* Width of the button */
+        height: 40px; /* Height of the button */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow */
+        margin: 5px; /* Margin between buttons */
+        padding: 0;
+      }
 
-.esri-widget--button .esri-icon {
-    margin: 0; /* Center the icon */
-    font-size: 30px; /* Size of the icon */
-    font-weight: 700;
-    color: #0079c1; /* Icon color */
-  }
+      .esri-widget--button .esri-icon {
+          margin: 0; /* Center the icon */
+          font-size: 30px; /* Size of the icon */
+          font-weight: 700;
+          color: #0079c1; /* Icon color */
+        }
 
-  ion-split-pane {
-  --side-width: 50%;
-  --side-max-width: 50%; 
-  --border: none;
-  }
+        ion-split-pane {
+        --side-width: 50%;
+        --side-max-width: 50%; 
+        --border: none;
+        }
 
-#rangecontainer {
-  background-color: white;
-  width: 30%;
-  position: absolute;
-  top:68px;
-  left: 70px;
- }
+      #rangecontainer {
+        background-color: white;
+        width: 30%;
+        position: absolute;
+        top:68px;
+        left: 70px;
+       }
 
-
-  ion-range {
-    width: 30%;
-    position: absolute;
-    top:24px;
-    left: 90px;
-    --knob-box-shadow:  0 3px 1px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.13), 0 0 0 1px rgba(0, 0, 0, 0.02);
-    --bar-background: #83A1A0;
-    --bar-background-active: #d7d8da;
-    --bar-height: 6px;
-    --bar-border-radius: 8px;
-    --knob-background: #ffffff;
-    --knob-size: 30px;
-    --pin-background: #ffafcc;
-    --pin-color: #fff; 
-  }
+      ion-range {
+        width: 30%;
+        position: absolute;
+        top:20px;
+        left: 85px;
+        --knob-box-shadow:  0 3px 1px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.13), 0 0 0 1px rgba(0, 0, 0, 0.02);
+        --bar-background: #ffcd00;
+        --bar-background-active: #d7d8da;
+        --bar-height: 6px;
+        --bar-border-radius: 8px;
+        --knob-background: #ffffff;
+        --knob-size: 30px;
+        --pin-background: #ffafcc;
+        --pin-color: #fff; 
+      }
 
      
     </style>
