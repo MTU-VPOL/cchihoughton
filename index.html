@@ -80,6 +80,18 @@
         --pin-color: #fff; 
       }
 
+      .transparency {
+         background-color: rgba(255, 255, 255, 0.8); 
+        position: absolute;
+       border-radius: 0px;
+       bottom: 0;
+       left: 0;
+        margin-top: 0px;
+        margin: 0;
+        z-index: 999999999999;
+        width: 100%;
+      }
+
      
     </style>
 
@@ -300,6 +312,16 @@
     </ion-header>
     <ion-content> 
       <div id="viewDiv"></div>
+       <ion-card class="transparency">
+  <ion-card-header>
+    <ion-card-title id="title" color="dark">Card Title</ion-card-title>
+    <ion-card-subtitle id="year" color="dark">Card Subtitle</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content id="desc">
+    Here's a small text description for the card content. Nothing more, nothing less.
+  </ion-card-content>
+</ion-card>
       <ion-range value="100" mode="ios"></ion-range> 
     </ion-content>
   </ion-menu>
@@ -315,16 +337,7 @@
     <ion-content>      
       <!-- Slider main container -->
 <div class="swiper">
-  <ion-card>
-  <ion-card-header>
-    <ion-card-title id="title">Card Title</ion-card-title>
-    <ion-card-subtitle id="year">Card Subtitle</ion-card-subtitle>
-  </ion-card-header>
-
-  <ion-card-content id="desc">
-    Here's a small text description for the card content. Nothing more, nothing less.
-  </ion-card-content>
-</ion-card>
+ 
   <!-- Additional required wrapper -->
   <div class="swiper-wrapper">
      <!-- Slides -->
